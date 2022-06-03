@@ -24,22 +24,25 @@ class ArrayMobject(Mobject):
 
 
 class FourierScene(Scene):
-    N = 10
+    N = 50
     SCALE = 3
     def construct(self):
         points = load("github.svg")
         amplitudes, frequencies, phases = fft(points, self.N)
+
         tracker = ValueTracker(0)
         arrows = [Arrow(ORIGIN, RIGHT) for _ in range(self.N)]
         circles = [Circle(radius=self.SCALE * amplitudes[i]) for i in range(self.N)]
+        path = VMobject()
+
         values = ArrayMobject()
         cumulative = ArrayMobject()
-        self.add(*arrows, *circles, values, cumulative)
-
         values.add_updater(lambda array, dt: array.set_data(np.array(
             [0] + [self.SCALE*a*np.exp(1j*(p+tracker.get_value()*f)) for a, f, p in zip(amplitudes, frequencies, phases)])), call_updater=True)
         cumulative.add_updater(lambda array, dt: array.become(
             values.sum()), call_updater=True)
+
+        self.add(*arrows, *circles, values, cumulative, path)
 
         for i, (arrow, ring) in enumerate(zip(arrows, circles)):
             arrow.idx = i
@@ -48,6 +51,9 @@ class FourierScene(Scene):
                 complex_to_R3(cumulative[ring.idx])))
             arrow.add_updater(lambda arrow: arrow.become(Arrow(complex_to_R3(
                 cumulative[arrow.idx]), complex_to_R3(cumulative[arrow.idx+1]), buff=0)))
+        
+        path.set_points_as_corners([complex_to_R3(cumulative[-1])] * 2)
+        path.add_updater(lambda path : path.add_points_as_corners([complex_to_R3(cumulative[-1])]))
 
-        self.play(tracker.animate.set_value(np.pi),
-                  run_time=3, rate_func=linear)
+        self.play(tracker.animate.set_value(2 * np.pi),
+                  run_time=10, rate_func=linear)
