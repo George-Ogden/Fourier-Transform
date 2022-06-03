@@ -3,7 +3,7 @@ import numpy as np
 
 def load(filename):
     paths, _ = svg2paths(filename)
-    points = np.array([shape.points(np.linspace(0,1,100)) for path in paths for shape in path]).reshape(-1)
+    points = np.array([shape.points(np.linspace(0,1,100)) for path in paths for shape in path]).reshape(-1).conjugate()
     points -= points.mean()
     points /= max(abs(points))
     return points
