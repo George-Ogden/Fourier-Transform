@@ -1,4 +1,4 @@
-from calculation import *
+from svgpathtools import svg2paths
 from manim import *
 import numpy as np
 
@@ -26,9 +26,15 @@ class ArrayMobject(Mobject):
 class FourierScene(Scene):
     N = 50
     SCALE = 3
+    def __init__(self, filename="github.svg",  n=N, rotations=.5, duration=3, *args, **kwargs):
+        super().__init__(*args,**kwargs)
+        self.points = self.load(filename)
+        self.N = n
+        self.rotations = rotations
+        self.duration = duration
+
     def construct(self):
-        points = load("github.svg")
-        amplitudes, frequencies, phases = fft(points, self.N)
+        amplitudes, frequencies, phases = self.fft(self.points, self.N)
 
         tracker = ValueTracker(0)
         arrows = [Arrow(ORIGIN, RIGHT) for _ in range(self.N)]
@@ -55,5 +61,24 @@ class FourierScene(Scene):
         path.set_points_as_corners([complex_to_R3(cumulative[-1])] * 2)
         path.add_updater(lambda path : path.add_points_as_corners([complex_to_R3(cumulative[-1])]))
 
-        self.play(tracker.animate.set_value(2 * np.pi),
-                  run_time=10, rate_func=linear)
+        self.play(tracker.animate.set_value(self.rotations * 2 * np.pi),
+                  run_time=self.duration, rate_func=linear)
+
+    @staticmethod  
+    def load(filename):
+        paths, _ = svg2paths(filename)
+        points = np.array([shape.points(np.linspace(0,1,100)) for path in paths for shape in path]).reshape(-1).conjugate()
+        points -= points.mean()
+        points /= max(abs(points))
+        return points
+
+    @staticmethod
+    def fft(points, n):
+        coefficients = np.fft.fft(points,norm="forward")
+        frequencies = np.fft.fftfreq(len(points),1/len(points))
+        indices = np.argsort(-abs(coefficients))[:n]
+        frequencies = frequencies[indices]
+        coefficients = coefficients[indices]
+        phases = np.angle(coefficients)
+        amplitudes = abs(coefficients)
+        return amplitudes, frequencies, phases
