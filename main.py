@@ -24,11 +24,25 @@ class ArrayMobject(Mobject):
         self.set_data(new_obj.get_data())
 
 
+class NestedPath(VMobject):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def updater(self, point, fade):
+        previous_path = NestedPath()
+        self.add(previous_path)
+        previous_path.set_points_as_corners(self.points.copy())
+        previous_path.add_updater(lambda path: path.fade(
+            fade) if path.get_stroke_opacity() > 1e-3 else path.clear_updaters())
+        self.add_points_as_corners([point])
+        self.set_points_as_corners(self.points[-4:])
+
+
 class FourierScene(Scene):
-    SCALE = 3
+    scale = 3
     colour = TEAL
 
-    def __init__(self, filename="github.svg",  n=50, rotations=.5, duration=2, fade=.01, *args, **kwargs):
+    def __init__(self, filename="github.svg",  n=50, rotations=.5, duration=3, fade=.005, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.points = self.load(filename)
         self.N = n
@@ -41,14 +55,14 @@ class FourierScene(Scene):
 
         tracker = ValueTracker(0)
         arrows = [Arrow(ORIGIN, RIGHT) for _ in range(self.N)]
-        circles = [Circle(radius=self.SCALE * amplitudes[i], color=self.colour,
+        circles = [Circle(radius=self.scale * amplitudes[i], color=self.colour,
                           stroke_width=2, stroke_opacity=.5) for i in range(self.N)]
-        path = VMobject()
+        path = NestedPath()
 
         values = ArrayMobject()
         cumulative = ArrayMobject()
         values.add_updater(lambda array, dt: array.set_data(np.array(
-            [0] + [self.SCALE*a*np.exp(1j*(p+tracker.get_value()*f)) for a, f, p in zip(amplitudes, frequencies, phases)])), call_updater=True)
+            [0] + [self.scale*a*np.exp(1j*(p+tracker.get_value()*f)) for a, f, p in zip(amplitudes, frequencies, phases)])), call_updater=True)
         cumulative.add_updater(lambda array, dt: array.become(
             values.sum()), call_updater=True)
 
@@ -63,10 +77,8 @@ class FourierScene(Scene):
                 cumulative[arrow.idx]), complex_to_R3(cumulative[arrow.idx+1]), buff=0, max_tip_length_to_length_ratio=.2, stroke_width=2, stroke_opacity=.8)))
 
         path.set_points_as_corners([complex_to_R3(cumulative[-1])] * 2)
-        path.add_updater(lambda path: path.add_points_as_corners(
-            [complex_to_R3(cumulative[-1])]))
-        path.add_updater(lambda path: path.set_stroke(opacity=np.concatenate(
-            ((1,), path.get_stroke_opacities() * (1 - self.fade)))))
+        path.add_updater(lambda path: path.updater(
+            complex_to_R3(cumulative[-1]), self.fade))
 
         self.play(tracker.animate.set_value(self.rotations * 2 * np.pi),
                   run_time=self.duration, rate_func=linear)
