@@ -2,6 +2,7 @@ from svgpathtools import svg2paths
 from manim import *
 import numpy as np
 
+
 class ArrayMobject(Mobject):
     def __init__(self, array=None):
         super().__init__()
@@ -24,21 +25,24 @@ class ArrayMobject(Mobject):
 
 
 class FourierScene(Scene):
-    N = 50
     SCALE = 3
-    def __init__(self, filename="github.svg",  n=N, rotations=.5, duration=3, *args, **kwargs):
-        super().__init__(*args,**kwargs)
+    colour = TEAL
+
+    def __init__(self, filename="github.svg",  n=50, rotations=.5, duration=2, fade=.01, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.points = self.load(filename)
         self.N = n
         self.rotations = rotations
         self.duration = duration
+        self.fade = fade
 
     def construct(self):
         amplitudes, frequencies, phases = self.fft(self.points, self.N)
 
         tracker = ValueTracker(0)
         arrows = [Arrow(ORIGIN, RIGHT) for _ in range(self.N)]
-        circles = [Circle(radius=self.SCALE * amplitudes[i]) for i in range(self.N)]
+        circles = [Circle(radius=self.SCALE * amplitudes[i], color=self.colour,
+                          stroke_width=2, stroke_opacity=.5) for i in range(self.N)]
         path = VMobject()
 
         values = ArrayMobject()
@@ -56,26 +60,30 @@ class FourierScene(Scene):
             ring.add_updater(lambda ring: ring.move_to(
                 complex_to_R3(cumulative[ring.idx])))
             arrow.add_updater(lambda arrow: arrow.become(Arrow(complex_to_R3(
-                cumulative[arrow.idx]), complex_to_R3(cumulative[arrow.idx+1]), buff=0)))
-        
+                cumulative[arrow.idx]), complex_to_R3(cumulative[arrow.idx+1]), buff=0, max_tip_length_to_length_ratio=.2, stroke_width=2, stroke_opacity=.8)))
+
         path.set_points_as_corners([complex_to_R3(cumulative[-1])] * 2)
-        path.add_updater(lambda path : path.add_points_as_corners([complex_to_R3(cumulative[-1])]))
+        path.add_updater(lambda path: path.add_points_as_corners(
+            [complex_to_R3(cumulative[-1])]))
+        path.add_updater(lambda path: path.set_stroke(opacity=np.concatenate(
+            ((1,), path.get_stroke_opacities() * (1 - self.fade)))))
 
         self.play(tracker.animate.set_value(self.rotations * 2 * np.pi),
                   run_time=self.duration, rate_func=linear)
 
-    @staticmethod  
+    @staticmethod
     def load(filename):
         paths, _ = svg2paths(filename)
-        points = np.array([shape.points(np.linspace(0,1,100)) for path in paths for shape in path]).reshape(-1).conjugate()
+        points = np.array([shape.points(np.linspace(0, 1, 100))
+                          for path in paths for shape in path]).reshape(-1).conjugate()
         points -= points.mean()
         points /= max(abs(points))
         return points
 
     @staticmethod
     def fft(points, n):
-        coefficients = np.fft.fft(points,norm="forward")
-        frequencies = np.fft.fftfreq(len(points),1/len(points))
+        coefficients = np.fft.fft(points, norm="forward")
+        frequencies = np.fft.fftfreq(len(points), 1/len(points))
         indices = np.argsort(-abs(coefficients))[:n]
         frequencies = frequencies[indices]
         coefficients = coefficients[indices]
