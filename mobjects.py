@@ -1,3 +1,4 @@
+from __future__ import annotations
 from manim import *
 import numpy as np
 
@@ -17,7 +18,7 @@ class ArrayMobject(Mobject):
     def set_data(self, data : np.ndarray):
         self.__data = data
 
-    def sum(self) -> np.ndarray:
+    def sum(self) -> ArrayMobject:
         # accumulate data and return new mobject
         return ArrayMobject(np.add.accumulate(self.get_data()))
 

@@ -73,36 +73,42 @@ class FourierScene(Scene):
 
 
 if __name__ == "__main__":
-    # parse cli args (--help for more info)
-    args = parse_args()
+    try:
+        # parse cli args (--help for more info)
+        args = parse_args()
 
-    # save the input file
-    # and output file
-    infile = args["options"]["filename"]
-    outfile = args["options"]["output"]
+        # save the input file
+        # and output file
+        infile = args["options"]["filename"]
+        outfile = args["options"]["output"]
 
-    # split the file into directory, filename, extension
-    head, tail = os.path.split(outfile)
-    ext = os.path.splitext(tail)[1]
-    # set the relevant manim config
-    # then create directories
-    config.output_file = tail
-    if ext == ".gif":
-        config.format = "gif"
-    else:
-        config.movie_file_extension = ext
-    if head:
-        os.makedirs(head, exist_ok=True)
+        # split the file into directory, filename, extension
+        head, tail = os.path.split(outfile)
+        ext = os.path.splitext(tail)[1]
+        # set the relevant manim config
+        # then create directories
+        config.output_file = tail
+        if ext == ".gif":
+            config.format = "gif"
+        else:
+            config.movie_file_extension = ext
+        if head:
+            os.makedirs(head, exist_ok=True)
 
-    # render the scene
-    scene = FourierScene(filename=infile, **args["Animation Options"])
-    scene.render()
+        # render the scene
+        scene = FourierScene(filename=infile, **args["Animation Options"])
+        scene.render()
 
-    # move file to the correct place and delete working directory
-    shutil.copy(os.path.join(config.get_dir(
-        "video_dir", module_name=os.path.dirname(infile)), tail), outfile)
-    shutil.rmtree(config.media_dir)
-
-    # preview file
-    if args["options"]["preview"]:
-        os.startfile(outfile)
+        # move file to the correct place
+        shutil.copy(os.path.join(config.get_dir(
+            "video_dir", module_name=os.path.dirname(infile)), tail), outfile)
+    
+        # preview file
+        if args["options"]["preview"]:
+            os.startfile(outfile)
+    except Exception as e:
+        print(f"{type(e).__name__}: {e}")
+    finally:
+        # delete working directory
+        if os.path.exists(config.media_dir):
+            shutil.rmtree(config.media_dir)
