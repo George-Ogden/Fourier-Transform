@@ -2,6 +2,9 @@ from svgpathtools import svg2paths
 from manim import *
 import numpy as np
 
+from argparse import ArgumentParser
+import shutil
+import os
 
 class ArrayMobject(Mobject):
     def __init__(self, array=None):
@@ -39,13 +42,13 @@ class NestedPath(VMobject):
 
 
 class FourierScene(Scene):
-    scale = 3
+    scale = 4
     colour = TEAL
 
-    def __init__(self, filename="github.svg",  n=50, rotations=.5, duration=3, fade=.005, *args, **kwargs):
+    def __init__(self, filename="github.svg",  number=50, rotations=.5, duration=3, fade=.005, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.points = self.load(filename)
-        self.N = n
+        self.N = number
         self.rotations = rotations
         self.duration = duration
         self.fade = fade
@@ -81,7 +84,7 @@ class FourierScene(Scene):
             complex_to_R3(cumulative[-1]), self.fade))
 
         self.play(tracker.animate.set_value(self.rotations * 2 * np.pi),
-                  run_time=self.duration, rate_func=linear)
+                  run_time=self.duration * self.rotations, rate_func=linear)
 
     @staticmethod
     def load(filename):
@@ -102,3 +105,55 @@ class FourierScene(Scene):
         phases = np.angle(coefficients)
         amplitudes = abs(coefficients)
         return amplitudes, frequencies, phases
+
+
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument("-i", "--input", "--input_file",
+                               dest="filename", required=True, help="file to transform")
+    parser.add_argument("-o", "--output", "--output_file", required=True, help="file to save to")
+    parser.add_argument(
+        "-p", "--preview", action="store_true", help="preview when complete")
+
+
+    image_options = parser.add_argument_group("Display Options")
+    image_options.add_argument(
+        "-n", "--number", type=int, default=50, help="number of circles")
+    image_options.add_argument(
+        "-r", "--rotations", type=int, default=2, help="number of complete rotations")
+    image_options.add_argument(
+        "-d", "--duration", type=float, default=10, help="duration of each rotation")
+    image_options.add_argument(
+        "--fade", type=float, default=0.005, help="fading rate")
+
+    args = parser.parse_args()
+    args_dict = {}
+    for group in parser._action_groups:
+        args_dict[group.title] = {arg.dest: getattr(
+            args, arg.dest, None) for arg in group._group_actions}
+    return args_dict
+
+
+if __name__ == "__main__":
+    config.disable_caching = True
+    config.verbosity = "ERROR"
+
+    args = parse_args()
+
+    infile = args["options"]["filename"]
+    outfile = args["options"]["output"]
+    head, tail = os.path.split(outfile)
+    ext = os.path.splitext(tail)[1]
+    config.output_file = tail
+    config.movie_file_extension = os.path.splitext(tail)[1]
+    if head:
+        os.makedirs(head,exist_ok=True)
+
+    scene = FourierScene(filename=infile,**args["Display Options"])
+    scene.render()
+
+    shutil.copy(os.path.join(config.get_dir("video_dir", module_name=os.path.dirname(infile)),tail), outfile)
+    shutil.rmtree(config.media_dir)
+
+    if args["options"]["preview"]:
+        os.startfile(outfile)

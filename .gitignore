@@ -4,3 +4,6 @@
 *.jpeg
 __pycache__
 media
+*.mp4
+*.avi
+*.gif
