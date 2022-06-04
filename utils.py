@@ -1,8 +1,9 @@
 from svgpathtools import svg2paths
+from typing import Tuple
 import numpy as np
 
 
-def load(filename):
+def load(filename : str) -> np.ndarray:
     # load path from file
     paths, _ = svg2paths(filename)
     # turn paths into array of points
@@ -16,7 +17,7 @@ def load(filename):
     return points
 
 
-def fft(points, n):
+def fft(points : np.ndarray, n : int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     # calculate fft using numpy
     coefficients = np.fft.fft(points, norm="forward")
     # get the frequencies

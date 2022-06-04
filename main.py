@@ -13,7 +13,7 @@ class FourierScene(Scene):
     # set scaling for circles and arrows
     scale = 4
 
-    def __init__(self, filename,  number, rotations, duration, fade, *args, **kwargs):
+    def __init__(self, filename : str,  number : int, rotations : int, duration : int, fade : float, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # load points from svg
         self.points = load(filename)

@@ -5,7 +5,7 @@ config.disable_caching = True
 config.verbosity = "ERROR"
 
 
-def parse_args():
+def parse_args() -> dict[dict, ...]:
     parser = ArgumentParser()
 
     # general arguments

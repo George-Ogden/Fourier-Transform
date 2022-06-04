@@ -4,28 +4,28 @@ import numpy as np
 
 # updating object to contain arrays
 class ArrayMobject(Mobject):
-    def __init__(self, array=None):
+    def __init__(self, array : np.ndarray = None):
         super().__init__()
         # save the data
         self.set_data(array)
 
     # data getter
-    def get_data(self):
+    def get_data(self) -> np.ndarray:
         return self.__data
 
     # data setter
-    def set_data(self, data):
+    def set_data(self, data : np.ndarray):
         self.__data = data
 
-    def sum(self):
+    def sum(self) -> np.ndarray:
         # accumulate data and return new mobject
         return ArrayMobject(np.add.accumulate(self.get_data()))
 
     # easy indexing
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> float:
         return self.get_data()[idx]
 
-    def become(self, new_obj):
+    def become(self, new_obj : ArrayMobject):
         # don't create new mobject
         self.set_data(new_obj.get_data())
 
@@ -34,7 +34,7 @@ class ArrayMobject(Mobject):
 
 
 class NestedPath(VMobject):
-    def updater(self, point, fade):
+    def updater(self, point : np.ndarray, fade: float):
         # save previous path
         # as submobject
         previous_path = NestedPath()
