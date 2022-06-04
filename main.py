@@ -145,7 +145,11 @@ if __name__ == "__main__":
     head, tail = os.path.split(outfile)
     ext = os.path.splitext(tail)[1]
     config.output_file = tail
-    config.movie_file_extension = os.path.splitext(tail)[1]
+    if ext == ".gif":
+        config.format = "gif"
+    else:
+        config.movie_file_extension = os.path.splitext(tail)[1]
+
     if head:
         os.makedirs(head,exist_ok=True)
 
