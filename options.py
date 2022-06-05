@@ -30,7 +30,7 @@ def parse_args() -> dict[dict, ...]:
                               default=3, help="number of complete rotations (default: 3)")
     anim_options.add_argument("-d", "--duration", type=float, default=10,
                               help="number of seconds for each rotation (default: 10)")
-    anim_options.add_argument("--fade", type=float, default=0.005,
+    anim_options.add_argument("-f", "--fade", type=float, default=0.005,
                               help="rate of exponential decay of path - higher means faster decay (default: 0.005)")
 
     # parse args
