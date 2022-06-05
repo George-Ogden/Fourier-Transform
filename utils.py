@@ -29,7 +29,7 @@ def polygon(n: int) -> np.ndarray:
     points *= 1j
     if not n % 2:
         points *= np.exp(1j * np.pi / n)
-    return points
+    return normalise(points)
 
 
 def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
