@@ -6,7 +6,7 @@ import os
 
 from mobjects import ArrayMobject, NestedPath
 from options import parse_args, config
-from utils import load, fft
+from utils import load, fft, polygon
 
 
 class FourierScene(Scene):
@@ -16,10 +16,11 @@ class FourierScene(Scene):
     def __init__(self, filename : str,  number : int, rotations : int, duration : int, fade : float, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # load points from svg
-        self.points = load(filename)
+        # self.points = load(filename)
+        self.points = polygon(4)
 
         # setup settings
-        self.N = number
+        self.N = min(number, len(self.points))
         self.rotations = rotations
         self.duration = duration
         self.fade = fade
@@ -73,39 +74,39 @@ class FourierScene(Scene):
 
 
 if __name__ == "__main__":
-    try:
-        # parse cli args (--help for more info)
-        args = parse_args()
+    # parse cli args (--help for more info)
+    args = parse_args()
 
-        # save the input file
-        # and output file
-        infile = args["options"]["filename"]
-        outfile = args["options"]["output"]
+    # save the input file
+    # and output file
+    infile = args["options"]["filename"]
+    outfile = args["options"]["output"]
 
-        # split the file into directory, filename, extension
-        head, tail = os.path.split(outfile)
-        ext = os.path.splitext(tail)[1]
-        # set the relevant manim config
-        # then create directories
-        config.output_file = tail
-        if ext == ".gif":
-            config.format = "gif"
-        else:
-            config.movie_file_extension = ext
-        if head:
-            os.makedirs(head, exist_ok=True)
+    # split the file into directory, filename, extension
+    head, tail = os.path.split(outfile)
+    ext = os.path.splitext(tail)[1]
+    # set the relevant manim config
+    # then create directories
+    config.output_file = tail
+    if ext == ".gif":
+        config.format = "gif"
+    else:
+        config.movie_file_extension = ext
+    if head:
+        os.makedirs(head, exist_ok=True)
 
-        # render the scene
-        scene = FourierScene(filename=infile, **args["Animation Options"])
-        scene.render()
+    # render the scene
+    scene = FourierScene(filename=infile, **args["Animation Options"])
+    scene.render()
 
-        # move file to the correct place
-        shutil.copy(os.path.join(config.get_dir(
-            "video_dir", module_name=os.path.dirname(infile)), tail), outfile)
-    
-        # preview file
-        if args["options"]["preview"]:
-            os.startfile(outfile)
+    # move file to the correct place
+    shutil.copy(os.path.join(config.get_dir(
+        "video_dir", module_name=os.path.dirname(infile)), tail), outfile)
+
+    # preview file
+    if args["options"]["preview"]:
+        os.startfile(outfile)
+    try:pass
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
     finally:
