@@ -24,12 +24,14 @@ def polygon(n: int) -> np.ndarray:
     # roots of unity
     points = np.array([np.linspace(np.exp(2j * k * np.pi / n), np.exp(2j *
                       (k + 1) * np.pi / n), 1000) for k in range(n)]).reshape(-1)
-    # rotate so start is top
+    # scale the points to fill 90% of the screen
+    # and rotate so start is top
     # and left if sides are even
+    points *= config.frame_height * .9 / 2
     points *= 1j
     if not n % 2:
         points *= np.exp(1j * np.pi / n)
-    return normalise(points)
+    return points
 
 
 def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
