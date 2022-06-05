@@ -11,7 +11,6 @@ from utils import load, fft, polygon
 
 class FourierScene(Scene):
     # set scaling for circles and arrows
-    scale = 4
 
     def __init__(self, points: np.ndarray,  number: int, rotations: int, duration: int, fade: float, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -31,7 +30,7 @@ class FourierScene(Scene):
         tracker = ValueTracker(0)
         # create arrows and circles for animation
         arrows = [Arrow(ORIGIN, RIGHT) for _ in range(self.N)]
-        circles = [Circle(radius=self.scale * amplitudes[i], color=TEAL,
+        circles = [Circle(radius=amplitudes[i], color=TEAL,
                           stroke_width=2, stroke_opacity=.5) for i in range(self.N)]
         # start a blank path
         path = NestedPath()
@@ -41,7 +40,7 @@ class FourierScene(Scene):
         cumulative = ArrayMobject()
         # set the value to e^i(a + wt)
         # and accumulate their sums
-        values.add_updater(lambda array, dt: array.set_data(np.array([0] + [self.scale * a * np.exp(1j * (
+        values.add_updater(lambda array, dt: array.set_data(np.array([0] + [a * np.exp(1j * (
             p + tracker.get_value() * f)) for a, f, p in zip(amplitudes, frequencies, phases)])), call_updater=True)
         cumulative.add_updater(lambda array, dt: array.become(
             values.sum()), call_updater=True)

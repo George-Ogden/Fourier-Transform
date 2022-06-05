@@ -1,13 +1,13 @@
 from svgpathtools import svg2paths
+from manim import config
 from typing import Tuple
 import numpy as np
 
-
 def normalise(points: np.ndarray) -> np.ndarray:
-    # centre points
-    # and fit them in a unit circle
-    points -= points.mean()
-    points /= max(abs(points))
+    # scale the points to fill 90% of the screen
+    # and place them in the centre
+    points /= max((max(points.real) - min(points.real)) / config.frame_width, (max(points.imag) - min(points.imag)) / config.frame_height) / .9
+    points -= (max(points.real) + min(points.real)) / 2 - (max(points.imag) + min(points.imag)) / 2j
     return points
 
 
