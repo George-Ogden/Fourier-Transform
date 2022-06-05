@@ -8,9 +8,13 @@ config.verbosity = "ERROR"
 def parse_args() -> dict[dict, ...]:
     parser = ArgumentParser()
 
+    # arguments for different input formats
+    format = parser.add_mutually_exclusive_group(required=True)
+    format.add_argument("-i", "--input", "--input_file",
+                        dest="filename", help="file to transform")
+    format.add_argument("-s", "--sides", type=int, help="sides of polygon")
+
     # general arguments
-    parser.add_argument("-i", "--input", "--input_file",
-                        dest="filename", required=True, help="file to transform")
     parser.add_argument("-o", "--output", "--output_file",
                         required=True, help="file to save to")
     parser.add_argument("-p", "--preview", action="store_true",
@@ -26,8 +30,6 @@ def parse_args() -> dict[dict, ...]:
         "-d", "--duration", type=float, default=10, help="duration of each rotation")
     anim_options.add_argument("--fade", type=float,
                               default=0.005, help="fading rate")
-
-    # TODO: add arguments for different input formats
 
     # parse args
     args = parser.parse_args()

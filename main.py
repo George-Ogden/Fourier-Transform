@@ -6,20 +6,19 @@ import os
 
 from mobjects import ArrayMobject, NestedPath
 from options import parse_args, config
-from utils import load, fft
+from utils import load, fft, polygon
 
 
 class FourierScene(Scene):
     # set scaling for circles and arrows
     scale = 4
 
-    def __init__(self, filename : str,  number : int, rotations : int, duration : int, fade : float, *args, **kwargs):
+    def __init__(self, points: np.ndarray,  number: int, rotations: int, duration: int, fade: float, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # load points from svg
-        self.points = load(filename)
 
         # setup settings
-        self.N = number
+        self.points = points
+        self.N = min(number, len(self.points))
         self.rotations = rotations
         self.duration = duration
         self.fade = fade
@@ -73,15 +72,18 @@ class FourierScene(Scene):
 
 
 if __name__ == "__main__":
+    # parse cli args (--help for more info)
+    args = parse_args()
+
     try:
-        # parse cli args (--help for more info)
-        args = parse_args()
+        # determine input format
+        if args["options"]["filename"]:
+            points = load(args["options"]["filename"])
+        elif args["options"]["sides"]:
+            points = polygon(args["options"]["sides"])
+        # TODO: text as input?
 
-        # save the input file
-        # and output file
-        infile = args["options"]["filename"]
         outfile = args["options"]["output"]
-
         # split the file into directory, filename, extension
         head, tail = os.path.split(outfile)
         ext = os.path.splitext(tail)[1]
@@ -96,16 +98,17 @@ if __name__ == "__main__":
             os.makedirs(head, exist_ok=True)
 
         # render the scene
-        scene = FourierScene(filename=infile, **args["Animation Options"])
+        scene = FourierScene(points=points, **args["Animation Options"])
         scene.render()
 
         # move file to the correct place
         shutil.copy(os.path.join(config.get_dir(
-            "video_dir", module_name=os.path.dirname(infile)), tail), outfile)
-    
+            "video_dir", module_name=""), tail), outfile)
+
         # preview file
         if args["options"]["preview"]:
             os.startfile(outfile)
+
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
     finally:
