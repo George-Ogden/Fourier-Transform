@@ -21,8 +21,11 @@ def load(filename: str) -> np.ndarray:
 
 
 def polygon(n: int) -> np.ndarray:
-    points = np.array([np.linspace(np.exp(2j * k * np.pi / n), np.exp(2j * (k + 1) * np.pi / n), 1000) for k in range(n)]).reshape(-1)
-    # return normalise(points)
+    points = np.array([np.linspace(np.exp(2j * k * np.pi / n), np.exp(2j *
+                      (k + 1) * np.pi / n), 1000) for k in range(n)]).reshape(-1)
+    points *= 1j
+    if not n % 2:
+        points *= np.exp(1j * np.pi / n)
     return points
 
 
