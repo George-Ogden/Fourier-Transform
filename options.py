@@ -16,7 +16,7 @@ def parse_args() -> dict[dict, ...]:
 
     # general arguments
     parser.add_argument("-o", "--output", "--output_file",
-                        required=True, help="file to save to")
+                        default="output.mp4", help="file to save to")
     parser.add_argument("-p", "--preview", action="store_true",
                         help="preview when complete")
 
