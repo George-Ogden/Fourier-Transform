@@ -7,8 +7,7 @@ config.frame_rate = 30
 
 
 def parse_args() -> dict[dict, ...]:
-    parser = ArgumentParser(
-        "2D Fourier Transform", description="Transform an image (.svg) or a polygon into a series of rotating circles")
+    parser = ArgumentParser(description="Transform an image (.svg) or a polygon into a series of rotating circles")
 
     # arguments for different input formats
     format = parser.add_mutually_exclusive_group(required=True)
