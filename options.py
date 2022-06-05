@@ -3,7 +3,7 @@ from manim import config
 
 config.disable_caching = True
 config.verbosity = "ERROR"
-
+config.frame_rate = 30
 
 def parse_args() -> dict[dict, ...]:
     parser = ArgumentParser()
@@ -25,7 +25,7 @@ def parse_args() -> dict[dict, ...]:
     anim_options.add_argument(
         "-n", "--number", type=int, default=50, help="number of circles")
     anim_options.add_argument(
-        "-r", "--rotations", type=int, default=2, help="number of complete rotations")
+        "-r", "--rotations", type=int, default=3, help="number of complete rotations")
     anim_options.add_argument(
         "-d", "--duration", type=float, default=10, help="duration of each rotation")
     anim_options.add_argument("--fade", type=float,
