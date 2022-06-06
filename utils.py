@@ -1,7 +1,10 @@
 from svgpathtools import svg2paths
+import cv2
+
 from manim import config
 from typing import Tuple
 import numpy as np
+
 
 def normalise(points: np.ndarray) -> np.ndarray:
     # scale the points to fill 90% of the screen
@@ -11,12 +14,32 @@ def normalise(points: np.ndarray) -> np.ndarray:
     return points
 
 
-def load(filename: str) -> np.ndarray:
+def load_svg(filename: str) -> np.ndarray:
     # load path from file
     paths, _ = svg2paths(filename)
     # turn paths into array of points
     points = np.array([shape.points(np.linspace(0, 1, 1000))
                       for path in paths for shape in path]).reshape(-1).conjugate()
+    return normalise(points)
+
+
+def load(filename: str) -> np.ndarray:
+    # load image from file
+    image = cv2.imread(filename)
+    # scale image to 1080 x 920 (max)
+    scale = min(920 / image.shape[0], 1080 / image.shape[1])
+    image = cv2.resize(image, (int(image.shape[1] * scale), int(image.shape[0] * scale)))
+    # find edges
+    edges = cv2.Canny(image, 100, 100)
+    # create contours
+    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    contours = np.array(contours,dtype=object)
+    # only keep contours with 50 or more pixels
+    contours = contours[np.vectorize(len)(contours) > 50]
+    # convert conours into complex numbers
+    points = np.concatenate(contours).reshape(-1,2)
+    points = points[:,0] - 1j * points[:,1]
+    # normalise
     return normalise(points)
 
 
