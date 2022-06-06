@@ -31,15 +31,20 @@ pip install -r requirements.txt
 Transform an image (.svg) or a polygon into a series of rotating circles
 
 ```
-usage: main.py [-h] (-i FILENAME | -s SIDES) [-o OUTPUT] [-p] [-n NUMBER] [-r ROTATIONS]
-               [-d DURATION] [--fade FADE]
+usage: main.py [-h] (-i FILENAME | -s SIDES) [-o OUTPUT] [-p] [-n NUMBER] [-r ROTATIONS] [-d DURATION] [-f FADE]
+
+Transform an image (.svg) or a polygon into a series of rotating circles
 
 options:
   -h, --help            show this help message and exit
+
+Input Options:
   -i FILENAME, --input FILENAME, --input_file FILENAME
                         transform an SVG file
   -s SIDES, --sides SIDES
                         create a polygon with s sides
+
+Output Options:
   -o OUTPUT, --output OUTPUT, --output_file OUTPUT
                         output file (default: output.mp4)
   -p, --preview         preview when complete
@@ -51,6 +56,5 @@ Animation Options:
                         number of complete rotations (default: 3)
   -d DURATION, --duration DURATION
                         number of seconds for each rotation (default: 10)
-  -f FADE, --fade FADE  rate of exponential decay of path - higher means faster decay (default:       
-                        0.005)
+  -f FADE, --fade FADE  rate of exponential decay of path - higher means faster decay (default: 0.005)
 ```

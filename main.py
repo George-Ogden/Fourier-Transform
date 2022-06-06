@@ -76,13 +76,13 @@ if __name__ == "__main__":
 
     try:
         # determine input format
-        if args["options"]["filename"]:
-            points = load(args["options"]["filename"])
-        elif args["options"]["sides"]:
-            points = polygon(args["options"]["sides"])
+        if args["Input Options"]["filename"]:
+            points = load(args["Input Options"]["filename"])
+        elif args["Input Options"]["sides"]:
+            points = polygon(args["Input Options"]["sides"])
         # TODO: text as input?
 
-        outfile = args["options"]["output"]
+        outfile = args["Output Options"]["output"]
         # split the file into directory, filename, extension
         head, tail = os.path.split(outfile)
         ext = os.path.splitext(tail)[1]
@@ -105,7 +105,7 @@ if __name__ == "__main__":
             "video_dir", module_name=""), tail), outfile)
 
         # preview file
-        if args["options"]["preview"]:
+        if args["Output Options"]["preview"]:
             os.startfile(outfile)
 
     except Exception as e:
