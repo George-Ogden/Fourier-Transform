@@ -5,31 +5,33 @@ config.disable_caching = True
 config.verbosity = "ERROR"
 config.frame_rate = 30
 
+
 def parse_args() -> dict[dict, ...]:
-    parser = ArgumentParser()
+    parser = ArgumentParser(description="Transform an image (.svg) or a polygon into a series of rotating circles")
 
     # arguments for different input formats
     format = parser.add_mutually_exclusive_group(required=True)
     format.add_argument("-i", "--input", "--input_file",
-                        dest="filename", help="file to transform")
-    format.add_argument("-s", "--sides", type=int, help="sides of polygon")
+                        dest="filename", help="transform an SVG file")
+    format.add_argument("-s", "--sides", type=int,
+                        help="create a polygon with s sides")
 
     # general arguments
     parser.add_argument("-o", "--output", "--output_file",
-                        default="output.mp4", help="file to save to")
+                        default="output.mp4", help="output file (default: output.mp4)")
     parser.add_argument("-p", "--preview", action="store_true",
                         help="preview when complete")
 
     # arguments for animation
     anim_options = parser.add_argument_group("Animation Options")
     anim_options.add_argument(
-        "-n", "--number", type=int, default=50, help="number of circles")
-    anim_options.add_argument(
-        "-r", "--rotations", type=int, default=3, help="number of complete rotations")
-    anim_options.add_argument(
-        "-d", "--duration", type=float, default=10, help="duration of each rotation")
-    anim_options.add_argument("--fade", type=float,
-                              default=0.005, help="fading rate")
+        "-n", "--number", type=int, default=50, help="number of circles (default: 50)")
+    anim_options.add_argument("-r", "--rotations", type=int,
+                              default=3, help="number of complete rotations (default: 3)")
+    anim_options.add_argument("-d", "--duration", type=float, default=10,
+                              help="number of seconds for each rotation (default: 10)")
+    anim_options.add_argument("-f", "--fade", type=float, default=0.005,
+                              help="rate of exponential decay of path - higher means faster decay (default: 0.005)")
 
     # parse args
     args = parser.parse_args()
