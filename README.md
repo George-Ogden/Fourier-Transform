@@ -2,8 +2,15 @@
 Transform an image (.svg) or a polygon into a series of rotating circles.  
 This project is written from scratch and it looks like a spin off from the videos because that was the aim, not because the code was copied (trust me if I could have, it would have saved me a ton of effort).  
 Inspired by [this video](https://www.youtube.com/watch?v=-qgreAUpPwM) and a challenge from a friend.
+## Maths
+See details of the maths explained in [this video](https://www.youtube.com/watch?v=r6sGWTCMz2k&t=853s).
 
 ## Examples
+### Images
+#### Handshake
+![Handshake](examples/output/handshake.gif "Handshake")
+#### Skyline
+![Skyline](examples/output/skyline.gif "Skyline")
 ### SVG Files
 #### Pi Creature
 ![Pi Creature](examples/output/pi.gif "Pi Creature")
@@ -31,7 +38,8 @@ pip install -r requirements.txt
 Transform an image (.svg) or a polygon into a series of rotating circles
 
 ```
-usage: main.py [-h] (-i FILENAME | -s SIDES) [-o OUTPUT] [-p] [-n NUMBER] [-r ROTATIONS] [-d DURATION] [-f FADE]
+usage: main.py [-h] (-v VECTOR | -i IMAGE | -s SIDES) [-o OUTPUT] [-p] [-n NUMBER] [-r ROTATIONS]
+               [-d DURATION] [-f FADE]
 
 Transform an image (.svg) or a polygon into a series of rotating circles
 
@@ -39,8 +47,10 @@ options:
   -h, --help            show this help message and exit
 
 Input Options:
-  -i FILENAME, --input FILENAME, --input_file FILENAME
+  -v VECTOR, --vector VECTOR
                         transform an SVG file
+  -i IMAGE, --image IMAGE
+                        transform an image file
   -s SIDES, --sides SIDES
                         create a polygon with s sides
 
@@ -56,5 +66,6 @@ Animation Options:
                         number of complete rotations (default: 3)
   -d DURATION, --duration DURATION
                         number of seconds for each rotation (default: 10)
-  -f FADE, --fade FADE  rate of exponential decay of path - higher means faster decay (default: 0.005)
+  -f FADE, --fade FADE  rate of exponential decay of path - higher means faster decay (default:       
+                        0.005)
 ```

@@ -1,9 +1,15 @@
-*.svg
-*.png
-*.jpg
-*.jpeg
+# temporary directories
 __pycache__
 media
+# input files
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tif
+*.tiff
+*.heic
+# output files
 *.mp4
 *.mov
 *.webm
