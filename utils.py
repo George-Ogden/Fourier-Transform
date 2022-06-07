@@ -1,9 +1,9 @@
-from svgpathtools import svg2paths
-import cv2
-
 from manim import config
 from typing import Tuple
 import numpy as np
+
+from svgpathtools import svg2paths
+import cv2
 
 
 def normalise(points: np.ndarray) -> np.ndarray:
