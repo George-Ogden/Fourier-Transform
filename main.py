@@ -6,7 +6,7 @@ import os
 
 from mobjects import ArrayMobject, NestedPath
 from options import parse_args, config
-from utils import load, fft, polygon
+from utils import load_image, load_svg, polygon, fft
 
 
 class FourierScene(Scene):
@@ -73,43 +73,45 @@ class FourierScene(Scene):
 if __name__ == "__main__":
     # parse cli args (--help for more info)
     args = parse_args()
+    try:
+        # determine input format
+        if args["Input Options"]["vector"]:
+            points = load_svg(args["Input Options"]["vector"])
+        elif args["Input Options"]["image"]:
+            points = load_image(args["Input Options"]["image"])
+        elif args["Input Options"]["sides"]:
+            points = polygon(args["Input Options"]["sides"])
+        # TODO: text as input?
 
-    # determine input format
-    if args["Input Options"]["filename"]:
-        points = load(args["Input Options"]["filename"])
-    elif args["Input Options"]["sides"]:
-        points = polygon(args["Input Options"]["sides"])
-    # TODO: text as input?
+        outfile = args["Output Options"]["output"]
+        # split the file into directory, filename, extension
+        head, tail = os.path.split(outfile)
+        ext = os.path.splitext(tail)[1]
+        # set the relevant manim config
+        # then create directories
+        config.output_file = tail
+        if ext == ".gif":
+            config.format = "gif"
+        else:
+            config.movie_file_extension = ext
+        if head:
+            os.makedirs(head, exist_ok=True)
 
-    outfile = args["Output Options"]["output"]
-    # split the file into directory, filename, extension
-    head, tail = os.path.split(outfile)
-    ext = os.path.splitext(tail)[1]
-    # set the relevant manim config
-    # then create directories
-    config.output_file = tail
-    if ext == ".gif":
-        config.format = "gif"
-    else:
-        config.movie_file_extension = ext
-    if head:
-        os.makedirs(head, exist_ok=True)
+        # render the scene
+        scene = FourierScene(points=points, **args["Animation Options"])
+        scene.render()
 
-    # render the scene
-    scene = FourierScene(points=points, **args["Animation Options"])
-    scene.render()
+        # move file to the correct place
+        shutil.copy(os.path.join(config.get_dir(
+            "video_dir", module_name=""), tail), outfile)
 
-    # move file to the correct place
-    shutil.copy(os.path.join(config.get_dir(
-        "video_dir", module_name=""), tail), outfile)
+        # preview file
+        if args["Output Options"]["preview"]:
+            os.startfile(outfile)
 
-    # preview file
-    if args["Output Options"]["preview"]:
-        os.startfile(outfile)
-
-    # except Exception as e:
-    #     print(f"{type(e).__name__}: {e}")
-    # finally:
-    #     # delete working directory
-    #     if os.path.exists(config.media_dir):
-    #         shutil.rmtree(config.media_dir)
+    except Exception as e:
+        print(f"{type(e).__name__}: {e}")
+    finally:
+        # delete working directory
+        if os.path.exists(config.media_dir):
+            shutil.rmtree(config.media_dir)

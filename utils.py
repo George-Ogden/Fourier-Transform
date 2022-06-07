@@ -23,7 +23,7 @@ def load_svg(filename: str) -> np.ndarray:
     return normalise(points)
 
 
-def load(filename: str) -> np.ndarray:
+def load_image(filename: str) -> np.ndarray:
     # load image from file
     image = cv2.imread(filename)
     # scale image to 1080 x 920 (max)
@@ -36,7 +36,7 @@ def load(filename: str) -> np.ndarray:
     contours = np.array(contours,dtype=object)
     # only keep contours with 50 or more pixels
     contours = contours[np.vectorize(len)(contours) > 50]
-    # convert conours into complex numbers
+    # convert contours into complex numbers
     points = np.concatenate(contours).reshape(-1,2)
     points = points[:,0] - 1j * points[:,1]
     # normalise
