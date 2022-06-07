@@ -9,8 +9,10 @@ import numpy as np
 def normalise(points: np.ndarray) -> np.ndarray:
     # scale the points to fill 90% of the screen
     # and place them in the centre
-    points /= max((max(points.real) - min(points.real)) / config.frame_width, (max(points.imag) - min(points.imag)) / config.frame_height) / .9
-    points -= (max(points.real) + min(points.real)) / 2 - (max(points.imag) + min(points.imag)) / 2j
+    points /= max((max(points.real) - min(points.real)) / config.frame_width,
+                  (max(points.imag) - min(points.imag)) / config.frame_height) / .9
+    points -= (max(points.real) + min(points.real)) / 2 - \
+        (max(points.imag) + min(points.imag)) / 2j
     return points
 
 
@@ -28,18 +30,20 @@ def load_image(filename: str) -> np.ndarray:
     image = cv2.imread(filename)
     # scale image to 1080 x 920 (max)
     scale = min(920 / image.shape[0], 1080 / image.shape[1])
-    image = cv2.resize(image, (int(image.shape[1] * scale), int(image.shape[0] * scale)))
+    image = cv2.resize(
+        image, (int(image.shape[1] * scale), int(image.shape[0] * scale)))
 
     # find edges
     edges = cv2.Canny(image, 100, 100)
     # create contours
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    contours = np.array(contours,dtype=object)
+    contours, _ = cv2.findContours(
+        edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    contours = np.array(contours, dtype=object)
     # only keep contours with 50 or more pixels
     contours = contours[np.vectorize(len)(contours) > 50]
     # convert contours into complex numbers
-    points = np.concatenate(contours).reshape(-1,2)
-    points = points[:,0] - 1j * points[:,1]
+    points = np.concatenate(contours).reshape(-1, 2)
+    points = points[:, 0] - 1j * points[:, 1]
 
     # find shortest path for better drawing
     points = shortest_path(points)
@@ -78,7 +82,8 @@ def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
     amplitudes = abs(coefficients)
     return amplitudes, frequencies, phases
 
-def shortest_path(points : np.ndarray) -> np.ndarray:
+
+def shortest_path(points: np.ndarray) -> np.ndarray:
     # keep only unique points
     points = np.unique(points)
     # initialise empty path
