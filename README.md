@@ -1,5 +1,5 @@
 # Fourier Transform (Epicycles)
-Transform an image (.svg) or a polygon into a series of rotating circles.  
+Transform an image or a polygon into a series of rotating circles.  
 This project is written from scratch and it looks like a spin off from the videos because that was the aim, not because the code was copied (trust me if I could have, it would have saved me a ton of effort).  
 Inspired by [this video](https://www.youtube.com/watch?v=-qgreAUpPwM) and a challenge from a friend.
 ## Maths
@@ -13,7 +13,7 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 ![Skyline](examples/output/skyline.gif "Skyline")
 ### SVG Files
 #### Pi Creature
-![Pi Creature](examples/output/pi.gif "Pi Creature")
+![Pi Creature](exampleUpdates/output/pi.gif "Pi Creature")
 #### GitHub Logo
 ![GitHub Logo](examples/output/github.gif "GitHub Logo")
 #### Heart
