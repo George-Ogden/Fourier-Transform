@@ -29,6 +29,7 @@ def load_image(filename: str) -> np.ndarray:
     # scale image to 1080 x 920 (max)
     scale = min(920 / image.shape[0], 1080 / image.shape[1])
     image = cv2.resize(image, (int(image.shape[1] * scale), int(image.shape[0] * scale)))
+
     # find edges
     edges = cv2.Canny(image, 100, 100)
     # create contours
@@ -39,6 +40,10 @@ def load_image(filename: str) -> np.ndarray:
     # convert contours into complex numbers
     points = np.concatenate(contours).reshape(-1,2)
     points = points[:,0] - 1j * points[:,1]
+
+    # find shortest path for better drawing
+    points = shortest_path(points)
+
     # normalise
     return normalise(points)
 
@@ -72,3 +77,19 @@ def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
     phases = np.angle(coefficients)
     amplitudes = abs(coefficients)
     return amplitudes, frequencies, phases
+
+def shortest_path(points : np.ndarray) -> np.ndarray:
+    # keep only unique points
+    points = np.unique(points)
+    # initialise empty path
+    path = np.ndarray(len(points), dtype=complex)
+
+    for i in range(len(points)):
+        # find the nearest point
+        nearest = np.abs(points - path[i-1]).argmin()
+        # set the next element in the path to this value
+        path[i] = points[nearest]
+        # delete that point
+        points = np.delete(points, nearest)
+
+    return path
