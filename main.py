@@ -75,11 +75,11 @@ if __name__ == "__main__":
     args = parse_args()
     try:
         # determine input format
-        if args["Input Options"]["vector"]:
+        if args["Input Options"]["format"] == "vector":
             points = load_svg(args["Input Options"]["vector"])
-        elif args["Input Options"]["image"]:
+        elif args["Input Options"]["format"] == "image":
             points = load_image(args["Input Options"]["image"])
-        elif args["Input Options"]["sides"]:
+        elif args["Input Options"]["format"] == "polygon":
             points = polygon(args["Input Options"]["sides"])
         # TODO: text as input?
 

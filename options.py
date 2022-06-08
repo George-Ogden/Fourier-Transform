@@ -8,15 +8,20 @@ config.frame_rate = 30
 
 def parse_args() -> dict[dict, ...]:
     parser = ArgumentParser(
-        description="Transform an image (.svg) or a polygon into a series of rotating circles")
+        description="Transform an image or a polygon into a series of rotating circles")
 
     # arguments for inputs
-    input_options = parser.add_argument_group("Input Options")
-    format = input_options.add_mutually_exclusive_group(required=True)
-    format.add_argument("-v", "--vector", help="transform an SVG file")
-    format.add_argument("-i", "--image", help="transform an image file")
-    format.add_argument("-s", "--sides", type=int,
-                        help="create a polygon with s sides")
+    input_options = parser.add_subparsers(
+        title="Input Options", description="Select different input formats", dest="format")
+    vector = input_options.add_parser(
+        "vector", help="transform an SVG file", description="vector")
+    vector.add_argument("-v", "--vector", help="SVG file")
+    image = input_options.add_parser(
+        "image", help="transform an image file", description="image")
+    image.add_argument("-i", "--image", help="image file")
+    sides = input_options.add_parser(
+        "polygon", help="transform a polygon", description="polygon")
+    sides.add_argument("-s", "--sides", type=int, help="number of sides")
 
     # arguments for outputs
     output_options = parser.add_argument_group("Output Options")
@@ -41,6 +46,11 @@ def parse_args() -> dict[dict, ...]:
     args_dict = {}
     for group in parser._action_groups:
         # split into groups based on title
-        args_dict[group.title] = {arg.dest: getattr(
-            args, arg.dest, None) for arg in group._group_actions}
+        args_dict[group.title] = {}
+        for arg in group._group_actions:
+            if hasattr(args, arg.dest):
+                args_dict[group.title][arg.dest] = getattr(args, arg.dest)
+                delattr(args, arg.dest)
+    # add remaining items into input options
+    args_dict["Input Options"] |= vars(args)
     return args_dict
