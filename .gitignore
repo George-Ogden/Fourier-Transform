@@ -9,6 +9,7 @@ media
 *.tif
 *.tiff
 *.heic
+*.svg
 # output files
 *.mp4
 *.mov
