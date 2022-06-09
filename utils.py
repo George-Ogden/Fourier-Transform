@@ -5,7 +5,8 @@ import numpy as np
 from svgpathtools import svg2paths
 import cv2
 
-import scipy.spatial
+from tqdm import trange
+import platform
 
 
 def normalise(points: np.ndarray) -> np.ndarray:
@@ -110,7 +111,7 @@ def shortest_path(points: np.ndarray, learning_rate: float = 0.8) -> np.ndarray:
     # generate an adequate network of neurons
     network = np.random.rand(n) + 1j * np.random.rand(n)
 
-    for i in range(len(points) * 5):
+    for _ in trange(len(points) * 5,desc="Optimising shape",ascii=True if platform.system() == "Windows" else None,leave=False):
         # choose a random city
         point = np.random.choice(points)
         idx = abs(network - point).argmin()
