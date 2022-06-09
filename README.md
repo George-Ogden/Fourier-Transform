@@ -11,6 +11,8 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 ![Handshake](examples/output/handshake.gif "Handshake")
 #### Skyline
 ![Skyline](examples/output/skyline.gif "Skyline")
+#### Bird
+![Bird](examples/output/bird.gif "Bird")
 ### SVG Files
 #### Pi Creature
 ![Pi Creature](exampleUpdates/output/pi.gif "Pi Creature")
@@ -38,21 +40,20 @@ pip install -r requirements.txt
 Transform an image (.svg) or a polygon into a series of rotating circles
 
 ```
-usage: main.py [-h] (-v VECTOR | -i IMAGE | -s SIDES) [-o OUTPUT] [-p] [-n NUMBER] [-r ROTATIONS]
-               [-d DURATION] [-f FADE]
+usage: main.py [-h] [-o OUTPUT] [-p] [-n NUMBER] [-r ROTATIONS] [-d DURATION] [-f FADE] {vector,image,polygon} ...
 
-Transform an image (.svg) or a polygon into a series of rotating circles
+Transform an image or a polygon into a series of rotating circles
 
 options:
   -h, --help            show this help message and exit
 
 Input Options:
-  -v VECTOR, --vector VECTOR
-                        transform an SVG file
-  -i IMAGE, --image IMAGE
-                        transform an image file
-  -s SIDES, --sides SIDES
-                        create a polygon with s sides
+  Select different input formats
+
+  {vector,image,polygon}
+    vector              transform an SVG file
+    image               transform an image file
+    polygon             transform a polygon
 
 Output Options:
   -o OUTPUT, --output OUTPUT, --output_file OUTPUT
@@ -66,6 +67,38 @@ Animation Options:
                         number of complete rotations (default: 3)
   -d DURATION, --duration DURATION
                         number of seconds for each rotation (default: 10)
-  -f FADE, --fade FADE  rate of exponential decay of path - higher means faster decay (default:       
-                        0.005)
+  -f FADE, --fade FADE  rate of exponential decay of path - higher means faster decay (default: 0.005)
+```
+### Images
+```
+usage: main.py image [-h] [-i IMAGE]
+
+image
+
+options:
+  -h, --help            show this help message and exit
+  -i IMAGE, --image IMAGE
+                        image file
+```
+### Vector Graphics
+```
+usage: main.py vector [-h] [-v VECTOR]
+
+vector
+
+options:
+  -h, --help            show this help message and exit
+  -v VECTOR, --vector VECTOR
+                        SVG file
+```
+### Polygon
+```
+usage: main.py polygon [-h] [-s SIDES]
+
+polygon
+
+options:
+  -h, --help            show this help message and exit
+  -s SIDES, --sides SIDES
+                        number of sides
 ```
