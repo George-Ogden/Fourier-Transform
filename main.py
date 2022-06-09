@@ -4,9 +4,9 @@ import numpy as np
 import shutil
 import os
 
+from utils import load_image, load_svg, load_text, polygon, fft
 from mobjects import ArrayMobject, NestedPath
 from options import parse_args, config
-from utils import load_image, load_svg, polygon, fft
 
 
 class FourierScene(Scene):
@@ -82,7 +82,8 @@ if __name__ == "__main__":
                 points = load_image(args["Input Options"]["image"])
             case "polygon":
                 points = polygon(args["Input Options"]["sides"])
-        # TODO: text as input?
+            case "text":
+                points = load_text(args["Input Options"]["text"])
 
         outfile = args["Output Options"]["output"]
         # split the file into directory, filename, extension

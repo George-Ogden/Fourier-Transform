@@ -136,3 +136,6 @@ def shortest_path(points: np.ndarray, learning_rate: float = 0.8) -> np.ndarray:
     route = points[np.argsort(
         [np.argmin(abs(network - point)) for point in points])]
     return route
+
+def load_text(text : str) -> np.ndarray:
+    pass

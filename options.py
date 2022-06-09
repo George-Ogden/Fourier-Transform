@@ -22,6 +22,9 @@ def parse_args() -> dict[dict, ...]:
     sides = input_options.add_parser(
         "polygon", help="transform a polygon", description="polygon")
     sides.add_argument("-s", "--sides", type=int, help="number of sides")
+    text = input_options.add_parser(
+        "text", help="transform text", description="text")
+    text.add_argument("-t", "--text", help="text")
 
     # arguments for outputs
     output_options = parser.add_argument_group("Output Options")
