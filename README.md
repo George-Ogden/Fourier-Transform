@@ -11,6 +11,8 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 ![Handshake](examples/output/handshake.gif "Handshake")
 #### Skyline
 ![Skyline](examples/output/skyline.gif "Skyline")
+#### Bird
+![Bird](examples/output/bird.gif "Bird")
 ### SVG Files
 #### Pi Creature
 ![Pi Creature](exampleUpdates/output/pi.gif "Pi Creature")
