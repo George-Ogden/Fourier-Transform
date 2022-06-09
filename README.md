@@ -15,7 +15,7 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 ![Bird](examples/output/bird.gif "Bird")
 ### SVG Files
 #### Pi Creature
-![Pi Creature](exampleUpdates/output/pi.gif "Pi Creature")
+![Pi Creature](example/output/pi.gif "Pi Creature")
 #### GitHub Logo
 ![GitHub Logo](examples/output/github.gif "GitHub Logo")
 #### Heart
