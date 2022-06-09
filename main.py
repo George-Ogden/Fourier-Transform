@@ -79,7 +79,7 @@ if __name__ == "__main__":
             case "vector":
                 points = load_svg(args["Input Options"]["vector"])
             case "image":
-                points = load_image(args["Input Options"]["image"])
+                points = load_image(args["Input Options"]["image"], args["Input Options"]["threshold"])
             case "polygon":
                 points = polygon(args["Input Options"]["sides"])
         # TODO: text as input?

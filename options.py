@@ -19,6 +19,8 @@ def parse_args() -> dict[dict, ...]:
     image = input_options.add_parser(
         "image", help="transform an image file", description="image")
     image.add_argument("-i", "--image", help="image file")
+    image.add_argument("-t", "--threshold", action="store_true",
+                       help="convert image to pure black and white")
     sides = input_options.add_parser(
         "polygon", help="transform a polygon", description="polygon")
     sides.add_argument("-s", "--sides", type=int, help="number of sides")
