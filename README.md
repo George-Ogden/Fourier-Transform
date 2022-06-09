@@ -29,7 +29,7 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 ![Hexagon](examples/output/hexagon.gif "Hexagon")
 
 ## Installation
-Requires `python >= 3.10`
+Requires `python >= 3.10`  
 The rendering uses [Manim Community](https://github.com/manimCommunity/manim) (the community version of the software in the [3Blue1Brown videos](https://www.youtube.com/c/3blue1brown) but you **don't** need to install $\LaTeX$.
 
 ```
