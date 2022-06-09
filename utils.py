@@ -1,5 +1,5 @@
+from typing import Tuple, Callable
 from manim import config
-from typing import Tuple
 import numpy as np
 
 from svgpathtools import svg2paths
@@ -38,7 +38,7 @@ def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
 
 
 # adapted from https://github.com/diego-vicente/som-tsp
-def shortest_path(points: np.ndarray, learning_rate: float = 0.8) -> np.ndarray:
+def shortest_path(points: np.ndarray, iterations: int = 0, learning_rate: float = 0.8) -> np.ndarray:
     # keep points only once 
     # and then the population size is 8 times the number of cities
     points = np.unique(points)
@@ -47,8 +47,11 @@ def shortest_path(points: np.ndarray, learning_rate: float = 0.8) -> np.ndarray:
     # generate an adequate network of neurons
     network = np.random.uniform(min(points.real), max(
         points.real), n) + 1j * np.random.uniform(min(points.imag), max(points.imag), n)
+    
+    if iterations == 0:
+        iterations = min(100000, int(np.log(n) / -np.log(.9997)))
 
-    for _ in trange(min(100000, int(np.log(n) / -np.log(.9997))), desc="Optimising shape", ascii=True if platform.system() == "Windows" else None, leave=False):
+    for _ in trange(iterations, desc="Optimising shape", ascii=True if platform.system() == "Windows" else None, leave=False):
         # choose a random city
         point = np.random.choice(points)
         idx = abs(network - point).argmin()
@@ -93,7 +96,7 @@ def greedy_shortest_path(points: np.ndarray) -> np.ndarray:
     return path
 
 
-def extract_edges(image: np.ndarray, algorithm = shortest_path) -> np.ndarray:
+def extract_edges(image: np.ndarray, algorithm : Callable[[np.ndarray], np.ndarray] = shortest_path) -> np.ndarray:
     # find edges
     edges = cv2.Canny(image, 100, 100)
     # create contours
@@ -167,7 +170,7 @@ def polygon(n: int) -> np.ndarray:
 
 def load_text(text: str) -> np.ndarray:
     # load font
-    font = ImageFont.truetype("arial-bold.ttf", size=1000)
+    font = ImageFont.truetype("brush.ttf", size=1000)
     # find the mask
     mask = font.getmask(text, mode="1")
     # convert to opencv-style image
