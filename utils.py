@@ -28,14 +28,13 @@ def load_svg(filename: str) -> np.ndarray:
     return normalise(points)
 
 
-def load_image(filename: str, threshold: bool = False) -> np.ndarray:
+def load_image(filename: str, threshold: bool = True) -> np.ndarray:
     # load image from file
     image = cv2.imread(filename)
     # scale image to 1080 x 920 (max)
     scale = min(920 / image.shape[0], 1080 / image.shape[1])
     image = cv2.resize(
         image, (int(image.shape[1] * scale), int(image.shape[0] * scale)))
-    # image = cv2.GaussianBlur(image, (11,11), 0)
 
     if threshold:
         # convert to grayscale
@@ -53,6 +52,7 @@ def load_image(filename: str, threshold: bool = False) -> np.ndarray:
         # shade everything that isn't the largest area
         image = np.zeros(image.shape, dtype=image.dtype)
         cv2.drawContours(image, [largest], -1, (255, 255, 255), -1)
+
     # find edges
     edges = cv2.Canny(image, 100, 100)
     # create contours
