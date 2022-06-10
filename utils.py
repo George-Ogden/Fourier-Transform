@@ -39,7 +39,7 @@ def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
 
 # adapted from https://github.com/diego-vicente/som-tsp
 def shortest_path(points: np.ndarray, iterations: int = 0, learning_rate: float = 0.8) -> np.ndarray:
-    # keep points only once 
+    # keep points only once
     # and then the population size is 8 times the number of cities
     points = np.unique(points)
     n = len(points) * 8
@@ -47,7 +47,7 @@ def shortest_path(points: np.ndarray, iterations: int = 0, learning_rate: float 
     # generate an adequate network of neurons
     network = np.random.uniform(min(points.real), max(
         points.real), n) + 1j * np.random.uniform(min(points.imag), max(points.imag), n)
-    
+
     if iterations == 0:
         iterations = min(100000, int(np.log(n) / -np.log(.9997)))
 
@@ -79,11 +79,14 @@ def shortest_path(points: np.ndarray, iterations: int = 0, learning_rate: float 
 
 
 def greedy_shortest_path(points: np.ndarray) -> np.ndarray:
-    # keep points only once 
+    # keep points only once
     points = np.unique(points)
-    
+
     # initialise empty path
     path = np.ndarray(len(points), dtype=complex)
+    points *= 1j
+    path[-1] = min(points[points.imag == min(points.imag)]) / 1j
+    points /= 1j
 
     for i in trange(len(points), desc="Optimising shape", ascii=True if platform.system() == "Windows" else None, leave=False):
         # find the nearest point
@@ -96,7 +99,7 @@ def greedy_shortest_path(points: np.ndarray) -> np.ndarray:
     return path
 
 
-def extract_edges(image: np.ndarray, algorithm : Callable[[np.ndarray], np.ndarray] = shortest_path) -> np.ndarray:
+def extract_edges(image: np.ndarray, algorithm: Callable[[np.ndarray], np.ndarray] = shortest_path) -> np.ndarray:
     # find edges
     edges = cv2.Canny(image, 100, 100)
     # create contours
@@ -168,9 +171,9 @@ def polygon(n: int) -> np.ndarray:
     return points
 
 
-def load_text(text: str) -> np.ndarray:
+def load_text(text: str, font: str) -> np.ndarray:
     # load font
-    font = ImageFont.truetype("brush.ttf", size=1000)
+    font = ImageFont.truetype(font, size=1000)
     # find the mask
     mask = font.getmask(text, mode="1")
     # convert to opencv-style image

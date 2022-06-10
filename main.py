@@ -83,7 +83,7 @@ if __name__ == "__main__":
             case "polygon":
                 points = polygon(args["Input Options"]["sides"])
             case "text":
-                points = load_text(args["Input Options"]["text"])
+                points = load_text(args["Input Options"]["text"], args["Input Options"]["font"])
 
         outfile = args["Output Options"]["output"]
         # split the file into directory, filename, extension
