@@ -6,7 +6,7 @@ from svgpathtools import svg2paths
 from PIL import ImageFont, Image
 import cv2
 
-from tqdm import trange
+from tqdm import trange, tqdm
 import platform
 
 
@@ -38,7 +38,7 @@ def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
 
 
 # adapted from https://github.com/diego-vicente/som-tsp
-def shortest_path(points: np.ndarray, iterations: int = 0, learning_rate: float = 0.8) -> np.ndarray:
+def self_organising_maps(points: np.ndarray, iterations: int = 0, learning_rate: float = 0.8) -> np.ndarray:
     # keep points only once
     # and then the population size is 8 times the number of cities
     points = np.unique(points)
@@ -99,7 +99,28 @@ def greedy_shortest_path(points: np.ndarray) -> np.ndarray:
     return path
 
 
-def extract_edges(image: np.ndarray, algorithm: Callable[[np.ndarray], np.ndarray] = shortest_path) -> np.ndarray:
+def optimised_shortest_path(points: np.ndarray, iterations : int = 2) -> np.ndarray:
+    # precompute greedy path
+    points = greedy_shortest_path(points)
+
+    for _ in range(iterations):
+        # start with points that are already in place
+        order = np.argsort(abs(points - np.roll(points, 1)) + abs(points - np.roll(points, -1)))
+        for i in order:
+            point = points[i]
+            # remove the point
+            points = np.delete(points, i)
+            # find the best place to insert
+            distances = abs(points - point)
+            heuristic = distances + np.roll(distances, 1) - abs(points - np.roll(points, 1))
+            nearest = heuristic.argmin()
+            # insert back in the shortest place
+            points = np.insert(points, nearest, point)        
+
+    return points
+
+
+def extract_edges(image: np.ndarray, shortest_path: Callable[[np.ndarray], np.ndarray] = self_organising_maps) -> np.ndarray:
     # find edges
     edges = cv2.Canny(image, 100, 100)
     # create contours
@@ -116,7 +137,7 @@ def extract_edges(image: np.ndarray, algorithm: Callable[[np.ndarray], np.ndarra
     # normalise
     # and find shortest path for better drawing
     points = normalise(points)
-    return algorithm(points)
+    return shortest_path(points)
 
 
 def load_svg(filename: str) -> np.ndarray:
