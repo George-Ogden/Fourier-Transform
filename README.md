@@ -27,6 +27,9 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 ![Triangle](examples/output/triangle.gif "Triangle")
 #### Hexagon
 ![Hexagon](examples/output/hexagon.gif "Hexagon")
+### Text
+#### Letter G
+![Letter G](examples/output/G.gif "Letter G")
 
 ## Installation
 Requires `python >= 3.10`  
@@ -54,6 +57,7 @@ Input Options:
     vector              transform an SVG file
     image               transform an image file
     polygon             transform a polygon
+    text                transform text
 
 Output Options:
   -o OUTPUT, --output OUTPUT, --output_file OUTPUT
@@ -101,4 +105,16 @@ options:
   -h, --help            show this help message and exit
   -s SIDES, --sides SIDES
                         number of sides
+```
+
+### Text
+```
+usage: main.py text [-h] [-t TEXT] [--font FONT]
+
+text
+
+options:
+  -h, --help            show this help message and exit
+  -t TEXT, --text TEXT  text
+  --font FONT           specify text font (default: examples/fonts/georgia.ttf)
 ```

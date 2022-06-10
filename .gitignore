@@ -10,6 +10,7 @@ media
 *.tiff
 *.heic
 *.svg
+*.ttf
 # output files
 *.mp4
 *.mov
