@@ -27,6 +27,9 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 ![Triangle](examples/output/triangle.gif "Triangle")
 #### Hexagon
 ![Hexagon](examples/output/hexagon.gif "Hexagon")
+### Text
+#### Letter G
+![Letter G](examples/output/G.gif "Letter G")
 
 ## Installation
 Requires `python >= 3.10`  
