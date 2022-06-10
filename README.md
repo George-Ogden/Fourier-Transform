@@ -75,46 +75,51 @@ Animation Options:
 ```
 ### Images
 ```
-usage: main.py image [-h] [-i IMAGE]
+usage: main.py image [-h] IMAGE
 
 image
 
+positional arguments:
+  IMAGE       image file
+
 options:
-  -h, --help            show this help message and exit
-  -i IMAGE, --image IMAGE
-                        image file
+  -h, --help  show this help message and exit
 ```
 ### Vector Graphics
 ```
-usage: main.py vector [-h] [-v VECTOR]
+usage: main.py vector [-h] VECTOR
 
 vector
 
+positional arguments:
+  VECTOR      SVG file
+
 options:
-  -h, --help            show this help message and exit
-  -v VECTOR, --vector VECTOR
-                        SVG file
+  -h, --help  show this help message and exit
 ```
 ### Polygon
 ```
-usage: main.py polygon [-h] [-s SIDES]
+usage: main.py polygon [-h] SIDES
 
 polygon
 
+positional arguments:
+  SIDES       number of sides
+
 options:
-  -h, --help            show this help message and exit
-  -s SIDES, --sides SIDES
-                        number of sides
+  -h, --help  show this help message and exit
 ```
 
 ### Text
 ```
-usage: main.py text [-h] [-t TEXT] [--font FONT]
+usage: main.py text [-h] [--font FONT] TEXT
 
 text
 
+positional arguments:
+  TEXT         text
+
 options:
-  -h, --help            show this help message and exit
-  -t TEXT, --text TEXT  text
-  --font FONT           specify text font (default: examples/fonts/georgia.ttf)
+  -h, --help   show this help message and exit
+  --font FONT  specify text font (default: examples/fonts/georgia.ttf)
 ```

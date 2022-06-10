@@ -15,16 +15,16 @@ def parse_args() -> dict[dict, ...]:
         title="Input Options", description="Select different input formats", dest="format")
     vector = input_options.add_parser(
         "vector", help="transform an SVG file", description="vector")
-    vector.add_argument("-v", "--vector", help="SVG file")
+    vector.add_argument("VECTOR", help="SVG file")
     image = input_options.add_parser(
         "image", help="transform an image file", description="image")
-    image.add_argument("-i", "--image", help="image file")
+    image.add_argument("IMAGE", help="image file")
     sides = input_options.add_parser(
         "polygon", help="transform a polygon", description="polygon")
-    sides.add_argument("-s", "--sides", type=int, help="number of sides")
+    sides.add_argument("SIDES", type=int, help="number of sides")
     text = input_options.add_parser(
         "text", help="transform text", description="text")
-    text.add_argument("-t", "--text", help="text")
+    text.add_argument("TEXT", help="text")
     text.add_argument("--font", default="example/fonts/georgia/ttf",
                       help="specify text font (default: examples/fonts/georgia.ttf)")
 
@@ -57,5 +57,5 @@ def parse_args() -> dict[dict, ...]:
                 args_dict[group.title][arg.dest] = getattr(args, arg.dest)
                 delattr(args, arg.dest)
     # add remaining items into input options
-    args_dict["Input Options"] |= vars(args)
+    args_dict["Input Options"] |= {k.lower() : v for k, v in vars(args).items()}
     return args_dict
