@@ -1,4 +1,4 @@
-from typing import Tuple, Callable
+from typing import Tuple, Callable, Union
 from manim import config
 import numpy as np
 
@@ -8,14 +8,19 @@ from paths import *
 import cv2
 
 
-def normalise(points: np.ndarray) -> np.ndarray:
+def normalise(points: np.ndarray, return_factor: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, float]]:
     # scale the points to fill 90% of the screen
     # and place them in the centre
-    points /= max((max(points.real) - min(points.real)) / config.frame_width,
-                  (max(points.imag) - min(points.imag)) / config.frame_height) / .9
+    scale = max((max(points.real) - min(points.real)) / config.frame_width,
+                (max(points.imag) - min(points.imag)) / config.frame_height) / .9
+    points /= scale
     points -= (max(points.real) + min(points.real)) / 2 - \
         (max(points.imag) + min(points.imag)) / 2j
-    return points
+    # return relevant data
+    if return_factor:
+        return points, scale
+    else:
+        return points
 
 
 def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -59,9 +64,12 @@ def load_svg(filename: str) -> np.ndarray:
     # load path from file
     paths, _ = svg2paths(filename)
     # turn paths into array of points
-    points = np.array([shape.points(np.linspace(0, 1, 1000))
-                      for path in paths for shape in path]).reshape(-1).conjugate()
-    return normalise(points)
+    points = np.concatenate([shape.points(np.linspace(0, 1, 100 * int(shape.length())))
+                      for path in paths for shape in path]).conjugate()
+    # normalise 
+    # and then subsample points
+    points, scale = normalise(points, return_factor=True)
+    return points[::int(scale)]
 
 
 def load_image(filename: str, threshold: bool = True) -> np.ndarray:
