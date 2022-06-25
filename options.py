@@ -25,7 +25,7 @@ def parse_args() -> dict[dict, ...]:
     text = input_options.add_parser(
         "text", help="transform text", description="text")
     text.add_argument("TEXT", help="text")
-    text.add_argument("--font", default="example/fonts/georgia/ttf",
+    text.add_argument("--font", default="examples/fonts/georgia.ttf",
                       help="specify text font (default: examples/fonts/georgia.ttf)")
 
     # arguments for outputs
