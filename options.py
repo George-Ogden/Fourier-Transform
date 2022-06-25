@@ -27,6 +27,9 @@ def parse_args() -> dict[dict, ...]:
     text.add_argument("TEXT", help="text")
     text.add_argument("--font", default="examples/fonts/georgia.ttf",
                       help="specify text font (default: examples/fonts/georgia.ttf)")
+    array = input_options.add_parser(
+        "array", help="transform a numpy array of points (1D array of complex numbers x + iy)", description="array")
+    array.add_argument("ARRAY", help="NPY file")
 
     # arguments for outputs
     output_options = parser.add_argument_group("Output Options")

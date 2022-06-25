@@ -4,7 +4,7 @@ import numpy as np
 import shutil
 import os
 
-from utils import load_image, load_svg, load_text, polygon, fft
+from utils import load_image, load_svg, load_text, load_points, polygon, fft
 from mobjects import ArrayMobject, NestedPath
 from options import parse_args, config
 
@@ -84,6 +84,8 @@ if __name__ == "__main__":
                 points = polygon(args["Input Options"]["sides"])
             case "text":
                 points = load_text(args["Input Options"]["text"], args["Input Options"]["font"])
+            case "array":
+                points = load_points(args["Input Options"]["array"])
 
         outfile = args["Output Options"]["output"]
         # split the file into directory, filename, extension
