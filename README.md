@@ -60,6 +60,7 @@ Input Options:
     image               transform an image file
     polygon             transform a polygon
     text                transform text
+    array               transform a numpy array of points (1D array of complex numbers x + iy)
 
 Output Options:
   -o OUTPUT, --output OUTPUT, --output_file OUTPUT
@@ -124,4 +125,16 @@ positional arguments:
 options:
   -h, --help   show this help message and exit
   --font FONT  specify text font (default: examples/fonts/georgia.ttf)
+```
+### Array
+```
+usage: main.py array [-h] ARRAY
+
+array
+
+positional arguments:
+  ARRAY       NPY file
+
+options:
+  -h, --help  show this help message and exit
 ```
