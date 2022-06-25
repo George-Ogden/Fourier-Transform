@@ -56,8 +56,8 @@ def extract_edges(image: np.ndarray, shortest_path: Callable[[np.ndarray], np.nd
     points = points[:, 0] - 1j * points[:, 1]
     # normalise
     # and find shortest path for better drawing
-    points = normalise(points)
-    return shortest_path(points)
+    points, scale = normalise(points, True)
+    return shortest_path(points[::int(scale/10)])
 
 
 def load_svg(filename: str) -> np.ndarray:
@@ -68,7 +68,7 @@ def load_svg(filename: str) -> np.ndarray:
                       for path in paths for shape in path]).conjugate()
     # normalise 
     # and then subsample points
-    points, scale = normalise(points, return_factor=True)
+    points, scale = normalise(points, True)
     return points[::int(scale)]
 
 
