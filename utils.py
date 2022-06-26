@@ -125,3 +125,9 @@ def load_text(text: str, font: str) -> np.ndarray:
     image = np.array(image)
     # extract edges
     return extract_edges(image, greedy_shortest_path)
+
+def load_points(filename : str) -> np.ndarray:
+    # load the points from the file
+    # and normalise points
+    points = np.load(filename)
+    return normalise(points)
