@@ -30,8 +30,10 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 #### Hexagon
 ![Hexagon](examples/output/hexagon.gif "Hexagon")
 ### Text
-#### Letter G
-![Letter G](examples/output/G.gif "Letter G")
+#### Word 'Guru'
+![Word 'Guru'](examples/output/Guru.gif "Word 'Guru'")
+#### Letter 'G'
+![Letter 'G'](examples/output/G.gif "Letter 'G'")
 ### Points
 #### Treble Clef
 ![Treble Clef](examples/output/treble-clef.gif "Treble Clef")
