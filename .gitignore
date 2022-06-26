@@ -11,6 +11,8 @@ media
 *.heic
 *.svg
 *.ttf
+*.npy
+
 # output files
 *.mp4
 *.mov
