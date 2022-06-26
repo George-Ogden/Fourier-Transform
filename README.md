@@ -32,6 +32,9 @@ See details of the maths explained in [this video](https://www.youtube.com/watch
 ### Text
 #### Letter G
 ![Letter G](examples/output/G.gif "Letter G")
+### Points
+#### Treble Clef
+![Treble Clef](examples/output/treble-clef.gif "Treble Clef")
 
 ## Installation
 Requires `python >= 3.10`  
