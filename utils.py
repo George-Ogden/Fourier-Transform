@@ -40,7 +40,7 @@ def fft(points: np.ndarray, n: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
     return amplitudes, frequencies, phases
 
 
-def extract_edges(image: np.ndarray, shortest_path: Callable[[np.ndarray], np.ndarray] = self_organising_maps) -> np.ndarray:
+def extract_edges(image: np.ndarray, shortest_path: Callable[[np.ndarray], np.ndarray] = self_organising_maps, subsample=True) -> np.ndarray:
     # find edges
     edges = cv2.Canny(image, 100, 100)
     # create contours
@@ -57,7 +57,9 @@ def extract_edges(image: np.ndarray, shortest_path: Callable[[np.ndarray], np.nd
     # normalise
     # and find shortest path for better drawing
     points, scale = normalise(points, True)
-    return shortest_path(points[::int(scale/10)])
+    if not subsample:
+        scale = 0
+    return shortest_path(points[::max(int(scale/10),1)])
 
 
 def load_svg(filename: str) -> np.ndarray:
@@ -66,10 +68,8 @@ def load_svg(filename: str) -> np.ndarray:
     # turn paths into array of points
     points = np.concatenate([shape.points(np.linspace(0, 1, 100 * int(shape.length())))
                       for path in paths for shape in path]).conjugate()
-    # normalise 
-    # and then subsample points
-    points, scale = normalise(points, True)
-    return points[::int(scale)]
+    # normalise points
+    return normalise(points)
 
 
 def load_image(filename: str, threshold: bool = True) -> np.ndarray:
@@ -124,7 +124,7 @@ def load_text(text: str, font: str) -> np.ndarray:
     image = Image.frombytes(mask.mode, mask.size, bytes(mask))
     image = np.array(image)
     # extract edges
-    return extract_edges(image, greedy_shortest_path)
+    return extract_edges(image, greedy_shortest_path, False)
 
 def load_points(filename : str) -> np.ndarray:
     # load the points from the file
