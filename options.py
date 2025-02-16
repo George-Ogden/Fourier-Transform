@@ -1,4 +1,6 @@
 from argparse import ArgumentParser
+import os
+
 from manim import config
 
 config.disable_caching = True
@@ -35,8 +37,9 @@ def parse_args() -> dict[dict, ...]:
     output_options = parser.add_argument_group("Output Options")
     output_options.add_argument("-o", "--output", "--output_file",
                                 default="output.mp4", help="output file (default: output.mp4)")
-    output_options.add_argument("-p", "--preview", action="store_true",
-                                help="preview when complete")
+    if hasattr(os, "startfile"):
+        output_options.add_argument("-p", "--preview", action="store_true",
+                                    help="preview when complete")
 
     # arguments for animation
     anim_options = parser.add_argument_group("Animation Options")
