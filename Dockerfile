@@ -14,5 +14,5 @@ RUN pip install -r requirements.txt
 
 VOLUME ["/app"]
 
-# CMD ["python", "main.py"]
-CMD ["/bin/bash"]
+ENTRYPOINT ["python", "main.py"]
+CMD ["--help"]
